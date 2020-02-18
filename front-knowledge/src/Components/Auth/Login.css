@@ -1,0 +1,95 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    background: #ffffff;
+  }
+  
+
+  .stand{
+    position: relative;  
+  }
+  
+
+  
+  .inner-screen{
+    background: #EC008C;
+    padding-top: 340px;
+    padding-bottom: 379px;
+  }
+  
+  .form{
+    width: 400px;
+    height: 300px;
+    background: #edeff1;
+    margin: 0px auto;
+    padding-top: 20px;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+  }
+  .acc{
+    padding: 30px;
+  }
+  
+  input[type="text"]{
+    display: block;
+    width: 309px;
+    height: 35px;
+    margin: 15px auto;
+    background: #fff;
+    border: 0px;
+    padding: 5px;
+    font-size: 16px;
+    border: 2px solid #fff;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+  }
+  input[type="password"]{
+    display: block;
+    width: 309px;
+    height: 35px;
+    margin: 15px auto;
+    background: #fff;
+    border: 0px;
+    padding: 5px;
+    font-size: 16px;
+     border: 2px solid #fff;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+  }
+  
+  input[type="text"]:focus{
+    border: 2px solid #EC008C
+  }
+
+  input[type="password"]:focus{
+    border: 2px solid #EC008C
+  }
+  
+  input[type="submit"]{
+    display: block;
+    background: #EC008C;
+    width: 314px;
+    padding: 12px;
+    cursor: pointer;
+    color: #fff;
+    border: 0px;
+    margin: auto;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    font-size: 17px;
+    transition: all 0.3s ease;
+  }
+  
+  input[type="submit"]:hover{
+    background: #EC008C
+  }
+  
+  a:hover{
+    color: #1abc9d;
+  }
