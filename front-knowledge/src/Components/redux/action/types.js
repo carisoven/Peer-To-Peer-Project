@@ -26,15 +26,14 @@ export const SHOWALL_KNOW = "SHOWALL_KNOW";
 export const SHOW_KNOW = "SHOW_KNOW";
 export const SHOW_IDKNOW = "SHOW_IDKNOW";
 
-export const EDIT_KNOW ="EDIT_KNOW";
+export const EDIT_KNOW = "EDIT_KNOW";
 
 export const SHOW_APPLY = "SHOW_APPLY";
 export const GET_APPLY = "GET_APPLY";
-// export const GET_POSTS = 'GET_POSTS';
-// export const GET_POST = 'GET_POST';
-// export const POST_ERROR = 'POST_ERROR';
-// export const UPDATE_LIKES = 'UPDATE_LIKES';
-// export const DELETE_POST = 'DELETE_POST';
-// export const ADD_POST = 'ADD_POST';
-// export const ADD_COMMENT = 'ADD_COMMENT';
-// export const REMOVE_COMMENT = 'REMOVE_COMMENT';
+
+export const DELETE_KNOW = "DELETE_KNOW";
+export const KNOW_ERROR = "KNOW_ERROR";
+export const GET_USERID = "GET_USERID";
+
+export const SHOWRESEV_ID ="SHOWRESEV_ID";
+export const SHOWSEND_ID ="SHOWSEND_ID";

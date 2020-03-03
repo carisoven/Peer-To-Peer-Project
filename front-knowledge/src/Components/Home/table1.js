@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
 import { getKnowledge } from "../redux/action/knowledge";
-
+import renderHTML from "react-render-html";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Table } from "antd";
+import { Table, Button } from "antd";
 
 import { Link } from "react-router-dom";
-import { Button } from "antd";
 
 const Table1 = ({ getKnowledge, knowledge: { knowledge } }) => {
   useEffect(() => {
@@ -14,79 +13,57 @@ const Table1 = ({ getKnowledge, knowledge: { knowledge } }) => {
   }, [getKnowledge]);
 
   const columns = [
-    // {title: "รหัส",dataIndex: "id",key: "id"},
     { title: "หัวข้อ", dataIndex: "title", key: "title" },
-    { title: "รายละเอียด", dataIndex: "discription", key: "discription" },
     { title: "status", dataIndex: "status", key: "status" },
     {
       title: "Edit",
       key: "Edit",
-      render: (text, record) => (
-        <span>
-          <Link to={`/edit-knowledge/${record._id}`}>
-            <Button type="primary" shape="round" icon="edit">
-              Edit
-            </Button>
-          </Link>
-          {   }
-          <Link to={`/del-knowledge/${record._id}`}>
-            <Button type="danger" shape="round" icon="delete">
-              Delete
-            </Button>
-          </Link>
-        </span>
-      )
+      render: record => {
+        renderHTML(record.discription);
+        return (
+          <span>
+            <Link to={`/knowledge/${record._id}`}>
+              <Button type="primary" shape="round" icon="eye">
+                View
+              </Button>
+            </Link>
+            <Link to={`/edit-knowledge/${record._id}`}>
+              <Button type="primary" shape="round" icon="edit">
+                Edit
+              </Button>
+            </Link>
+            <Link to={`/del-knowledge/${record._id}`}>
+              <Button type="danger" shape="round" icon="delete">
+                Delete
+              </Button>
+            </Link>
+          </span>
+        );
+      }
     }
   ];
-  // const know = [];
-
-  //     knowledge.forEach(doc => {
-  //       const {_id, title, discription,status} = doc.data();
-  //       know.push({
-  //         title: title,
-  //         discription: discription,
-  //         status: status,
-  //         edit:(
-  //           <Link to={`/room-show/${_id}`}>
-  //           <Button type="primary" shape="round" icon="edit">
-  //             Edit
-  //           </Button>
-  //         </Link>
-  //         )
-  //       })
-  //     });
-
-  // const res = knowledge.map((eaa)=> know.push({
-  //   title: eaa.title,
-  //   discription: eaa.discription,
-  //   status: eaa.status,
-  //   edit:(
-  //     <Link to={`/room-show/${eaa._id}`}>
-  //     <Button type="primary" shape="round" icon="edit">
-  //       Edit
-  //     </Button>
-  //   </Link>
-  //   )
-  // }))
-
-  // const result = knowledge.filter((know) => {
-  //   return know.status !== "true"
-  // })
 
   return (
-    <div>
-      <Table columns={columns} dataSource={knowledge} scroll={{ x: 300 }} />
+    <div style={{ backgroundColor: "#DCDCDC", borderRadius: "5px" }}>
+      <Table
+        columns={columns}
+        dataSource={knowledge}
+        pagination={{ pageSize: 20 }}
+        scroll={{ x: 300, y: 250 }}
+      />
     </div>
   );
 };
 
 Table1.propsTypes = {
   getKnowledge: PropTypes.func.isRequired,
-  knowledge: PropTypes.object.isRequired
+  knowledge: PropTypes.object.isRequired,
+  knows: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  knowledge: state.knowledge
+  knowledge: state.knowledge,
+  knows: state.knows
 });
 
 export default connect(mapStateToProps, { getKnowledge })(Table1);

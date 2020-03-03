@@ -1,8 +1,8 @@
-import { GETALL_RESEVER, GETALL_ERROR } from "../action/types";
+import { GETALL_RESEVER, GETALL_ERROR, SHOWRESEV_ID } from "../action/types";
 
 const initialState = {
   resever: null,
-  resevers: [],
+  resev: null,
   repos: [],
   loading: true,
   error: {}
@@ -24,6 +24,12 @@ export default function(state = initialState, action) {
         error: payload,
         loading: false,
         resever: null
+      };
+    case SHOWRESEV_ID:
+      return {
+        ...state,
+        resev: payload,
+        loading: false
       };
     default:
       return state;

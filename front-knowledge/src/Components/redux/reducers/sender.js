@@ -1,8 +1,9 @@
-import { GETALL_SENDER , GETSENDER_ERROR , GET_APPLY  } from "../action/types";
+import { GETALL_SENDER, GETSENDER_ERROR, GET_APPLY,SHOWSEND_ID } from "../action/types";
 
 const initialState = {
   sender: null,
-  send:null,
+  send: null,
+  sen: null,
   senders: [],
   repos: [],
   loading: true,
@@ -26,12 +27,18 @@ export default function(state = initialState, action) {
         loading: false,
         sender: null
       };
-      case GET_APPLY:
-        return{
+    case GET_APPLY:
+      return {
+        ...state,
+        send: payload,
+        loading: false
+      };
+      case SHOWSEND_ID:
+        return {
           ...state,
-          send:payload,
+          sen: payload,
           loading: false
-        }
+        };
     default:
       return state;
   }

@@ -27,11 +27,15 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
     try {
-      //add Knowlege
+      
+
+      //search Sender
       const user2 = await User.findOne({ name: req.body.name }).select(
         "-password"
       );
+      //Search Resever (User Logged in)
       const user = await User.findById(req.user.id).select("-password");
+      //add Knowlege
       const newknow = new Know({
         title: req.body.title,
         discription: req.body.discription,
@@ -46,7 +50,9 @@ router.post(
         uid: req.user.id,
         name: user.name,
         title: req.body.title,
-        discription: req.body.discription
+        discription: req.body.discription,
+        uidsend: user2.id,
+        namesend: user2.name
       });
       const resev = await newResev.save();
       console.log(resev);
@@ -146,7 +152,6 @@ router.post(
       res.json(knownn);
       res.json(resever);
       res.json(sends);
-      
     } catch (err) {
       console.error(err.message);
       res.status(500).send("Server Error");
@@ -155,9 +160,30 @@ router.post(
 );
 
 //Delete knowledge on db
-router.delete(
-"/delknow",
+router.delete("/:id", auth, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
-)
+  try {
+    const know = await Know.findById(req.params.id);
+    const know2 = await Know.findByIdAndDelete(req.params.id);
+    const resev = await Resever.findOneAndDelete({
+      title: know.title,
+      discription: know.discription
+    });
+    const send = await Sender.findOneAndDelete({
+      title: know.title,
+      discription: know.discription
+    });
+    res.json({ msg: "Know Delete" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+
 
 module.exports = router;

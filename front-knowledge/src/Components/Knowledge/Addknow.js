@@ -1,53 +1,83 @@
-import React, { useState, useEffect } from "react";
+import React, { useState,  Fragment } from "react";
 import {
-  Container,
+  
   Col,
-  Button,
   Form,
   FormGroup,
   Label,
   Input
 } from "reactstrap";
+import { Button , Card } from 'antd'
 import Navbar2 from "../Navbar/navbar";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { addKnowledge } from "../redux/action/knowledge";
-import { getUser } from "../redux/action/user";
-const Addknow = ({ addKnowledge, getUser, user: { users }, history }) => {
-  useEffect(() => {
-    getUser();
-  }, [getUser]);
+import { getUserSelect } from "../redux/action/user";
+import { Editor } from "@tinymce/tinymce-react";
+
+
+const Addknow = ({ addKnowledge, getUserSelect,users:{userid}, history }) => {
+
+  const [seaId, setSeaId] = useState({
+    uid:""
+  });
+  const {uid} = seaId;
+
+  const [displaySocialInputs, toggleSocialInputs] = useState(false);
 
   const [formKnow, setFormKnow] = useState({
+    uid:"",
     title: "",
     discription: "",
     name: "",
     status: "false"
   });
 
-  const { title, discription } = formKnow;
+  const { title } = formKnow;
+
+  //search id
+  const oChange = e => 
+  setSeaId({uid: e.target.value});
+  const oSubmit = e =>{
+    e.preventDefault();
+    getUserSelect(seaId)
+    toggleSocialInputs(!displaySocialInputs)
+
+  };
+
+  //add knowledge
 
   const onChange = e =>
-setFormKnow({ ...formKnow, [e.target.name]: e.target.value });
+    setFormKnow({ ...formKnow, [e.target.name]: e.target.value });
 
+  const handleEditorChange = e => {
+    console.log("Content was updated:");
+    setFormKnow({ discription: e.target.getContent(), status: "false", name: userid.name,title: title});
+  };  
   const onSubmit = e => {
     e.preventDefault();
     addKnowledge(formKnow, history);
   };
+  // console.log(user);
+  
+  console.log(formKnow);
+  // console.log(seaId);
+
   return (
-    <div>
+    <Fragment>
       <Navbar2 />
-      <Container style={{ margin: "20px" }}>
+      <div style={{ background: '#ECECEC', padding: '30px' }}>
+        <Card style={{height: 845}} bordered={false} >
         <FormGroup fluid>
-          <br />
-          <Form onSubmit={e => onSubmit(e)}>
-            <FormGroup row>
+
+          <Form>
+          <FormGroup row>
               <Label for="" sm={2}>
                 Title
               </Label>
-              <Col sm={10}>
+              <Col sm={2}>
                 <Input
-                  type="title"
+                  type="text"
                   name="title"
                   id="title"
                   placeholder="หัวเรื่องในการสอน"
@@ -56,50 +86,72 @@ setFormKnow({ ...formKnow, [e.target.name]: e.target.value });
                 />
               </Col>
             </FormGroup>
+
+          <FormGroup row>
+              <Label for="" sm={2}>Search User</Label>
+              <Col sm={2}>
+                <Input
+                  type="text"
+                  name="text"
+                  id="exampletext"
+                  placeholder=" Insert User ID "
+                  value={uid}
+                  onChange={e => oChange(e)}
+                />
+                <Button onClick={e => oSubmit(e)}>Search</Button>
+              </Col>
+            </FormGroup>
+            
+            {userid == null ||displaySocialInputs && (
+            <FormGroup>
+              <Label for="exampleText" sm={2}>ผลลัพธ์ในการค้นหา</Label>
+              <Col sm={2}>
+                <p>{userid.name}</p>
+              </Col>
+            </FormGroup>
+            )}
+
             <FormGroup row>
               <Label for="exampleText" sm={2}>
                 Discription
               </Label>
               <Col sm={10}>
-                <Input
-                  type="discription"
-                  name="discription"
-                  id="discription"
-                  placeholder="รายละเอียดในการสอน"
-                  value={discription}
-                  onChange={e => onChange(e)}
+                <Editor
+                apiKey='u9xnjd1zxyorl0cxv29cpdlfgxgr67ypm5gl6t0hw24tq7qs'
+                  initialValue="<p></p>"
+                  init={{
+                    height: 500,
+                    menubar: false,
+                    plugins: [
+                      "advlist autolink lists link image",
+                      "charmap print preview anchor help",
+                      "searchreplace visualblocks code",
+                      "insertdatetime media table paste wordcount"
+                    ],
+                    toolbar:
+                      "formatselect | bold italic | \
+                      alignleft aligncenter alignright | \
+                      bullist numlist outdent indent | help"
+                  }}
+                  onChange={e => handleEditorChange(e)}
                 />
               </Col>
             </FormGroup>
-            <FormGroup row>
-              <Label for="teach">ผู้สอน</Label>
-              <Input
-                type="select"
-                name="name"
-                id="teach"
-                onChange={e => onChange(e)}
-              >
-                {users.map(oss => (
-                  <option key={oss}>{oss.name}</option>
-                ))}
-              </Input>
-            </FormGroup>
-            <FormGroup row>
+
+            {/* <FormGroup row>
               <Label for="uploadfile">File</Label>
               <Input type="file" name="upload" id="upload" />
-            </FormGroup>
+            </FormGroup> */}
             <FormGroup check row>
               <Col sm={{ size: 10, offset: 2 }}>
-         
-                  <Button>Submit</Button>
-
-                
+                <Button onClick={e => onSubmit(e)}>Submit</Button>
               </Col>
             </FormGroup>
           </Form>
         </FormGroup>
-      </Container>
-    </div>
+        </Card>
+      </div>
+    </Fragment>
   );
 };
 
@@ -113,8 +165,11 @@ Addknow.propsTypes = {
 
 const mapStateToProps = state => ({
   knowledge: state.knowledge,
-  user: state.users,
+  users: state.users,
+  user:state.user,
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { addKnowledge, getUser })(Addknow);
+export default connect(mapStateToProps, { addKnowledge, getUserSelect })(
+  Addknow
+);
