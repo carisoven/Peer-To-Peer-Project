@@ -24,6 +24,10 @@ const senderSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true
+  },
+  knowid:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref:'knowlege'
   }
 });
 

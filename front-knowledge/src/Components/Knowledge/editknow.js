@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment,useEffect, useState } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Navbar2 from "../Navbar/navbar";
-import { Card,Button } from "antd";
+import { Card, Button } from "antd";
 import { getKnowbyID } from "../redux/action/knowledge";
-import {editKnowledge} from '../redux/action/knowledge';
+import { editKnowledge } from "../redux/action/knowledge";
 import { Col, Form, FormGroup, Label, Input } from "reactstrap";
+import { Editor } from '@tinymce/tinymce-react'; 
+import Loadpage from '../other/Loadpage';
 
 const Editknow = ({
-  editKnowledge, 
-  // know: { know },
+  editKnowledge,
+  knowledge:{knows,loading},
   getKnowbyID,
   match,
   history
@@ -17,40 +19,45 @@ const Editknow = ({
   useEffect(() => {
     getKnowbyID(match.params.id);
   }, [getKnowbyID]);
+  
 
   const [formKnows, setFormKnows] = useState({
-    id: match.params.id,
+    id: "",
     title: "",
     discription: ""
   });
 
-  const { title, discription } = formKnows;
+  const { title } = formKnows;
+
   const onChange = e =>
-    setFormKnows({ ...formKnows, [e.target.name]: e.target.value });
+  setFormKnows({ ...formKnows, [e.target.name]: e.target.value });
+
   const onSubmit = e => {
     e.preventDefault();
-    editKnowledge(formKnows,history);
+    editKnowledge(formKnows, history);
   };
+  const handleEditorChange = e =>
+    setFormKnows({discription: e.target.getContent(),id:match.params.id,title:title});
+
   console.log(formKnows);
 
-  return (
-    <div>
+
+  return knows == null ? (
+    <Loadpage/>
+    ):(
+      <Fragment>
       <Navbar2 />
-      <div style={{ background: "#ECECEC", padding: "30px", height: 915 }}>
-        <Card
-          // title={know.title}
-          bordered={false}
-          style={{ width: 600, height: 700 }}
-        >
-          {/* <p style={{ fontSize: 15 }}>{know.discription}</p> */}
-          <Form >
-            <FormGroup row>
+      <div  style={{ background: '#ECECEC', padding: '30px' ,height: 920}} >
+        <FormGroup fluid>
+        <Card title={knows.title} bordered={false} >
+          <Form>
+          <FormGroup row>
               <Label for="" sm={2}>
                 Title
               </Label>
-              <Col sm={10}>
+              <Col sm={2}>
                 <Input
-                  type="title"
+                  type="text"
                   name="title"
                   id="title"
                   placeholder="หัวเรื่องในการสอน"
@@ -59,43 +66,61 @@ const Editknow = ({
                 />
               </Col>
             </FormGroup>
+
             <FormGroup row>
               <Label for="exampleText" sm={2}>
                 Discription
               </Label>
               <Col sm={10}>
-                <Input
-                  type="discription"
-                  name="discription"
-                  id="discription"
-                  placeholder="รายละเอียดในการสอน"
-                  value={discription}
-                  onChange={e => onChange(e)}
+                <Editor
+                  apiKey='u9xnjd1zxyorl0cxv29cpdlfgxgr67ypm5gl6t0hw24tq7qs'
+                  initialValue="<p>Initial content</p>"
+                  init={{
+                    height: 500,
+                    menubar: false,
+                    plugins: [
+                      "advlist autolink lists link image",
+                      "charmap print preview anchor help",
+                      "searchreplace visualblocks code",
+                      "insertdatetime media table paste wordcount"
+                    ],
+                    toolbar:
+                      "formatselect | bold italic | \
+                      alignleft aligncenter alignright | \
+                      bullist numlist outdent indent | help"
+                  }}
+                  value={knows.discription}
+                  onChange={e => handleEditorChange(e)}
                 />
               </Col>
             </FormGroup>
+
+            {/* <FormGroup row>
+              <Label for="uploadfile">File</Label>
+              <Input type="file" name="upload" id="upload" />
+            </FormGroup> */}
             <FormGroup check row>
               <Col sm={{ size: 10, offset: 2 }}>
-                <Button onClick={e => onSubmit(e)} type="primary" shape="round" icon="edit">
-                  Edit
-                </Button>
+                <Button onClick={e => onSubmit(e)}>Submit</Button>
               </Col>
             </FormGroup>
           </Form>
-        </Card>
-      </div>
-    </div>
+          </Card>
+        </FormGroup>
+        </div>
+    </Fragment>
   );
 };
 Editknow.propTypes = {
   editKnowledge: PropTypes.func.isRequired,
   getKnowbyID: PropTypes.func.isRequired,
-  // knowledge: PropTypes.object.isRequired,
-  know: PropTypes.object.isRequired
+  knows: PropTypes.object.isRequired,
+  knowledge:PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
-  know: state.know
+  knowledge: state.knowledge,
+  knows:state.knows
 });
-
-export default connect(mapStateToProps, { getKnowbyID, editKnowledge })(Editknow);
-
+export default connect(  mapStateToProps,{ getKnowbyID, editKnowledge })(
+  Editknow
+);

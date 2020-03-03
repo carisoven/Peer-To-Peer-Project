@@ -16,6 +16,18 @@ const resevSchema = new mongoose.Schema({
     discription:{
         type: mongoose.Schema.Types.String,
         ref: "knowlege"
+    },
+    uidsend: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
+    },
+    namesend: {
+        type: mongoose.Schema.Types.String,
+        ref: "user"
+    },
+    knowid:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'knowlege'
     }
 });
 

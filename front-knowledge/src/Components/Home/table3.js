@@ -5,11 +5,7 @@ import PropTypes from "prop-types";
 import { Table, Button, Popconfirm } from "antd";
 import { Link } from "react-router-dom";
 
-const Table3 = ({
-  getSender,
-  sender: { sender },
-  applySender
-}) => {
+const Table3 = ({ getSender, sender: { sender }, applySender }) => {
   useEffect(() => {
     getSender();
   }, [getSender]);
@@ -19,10 +15,8 @@ const Table3 = ({
     discription: ""
   });
   const columns = [
-    // {title: "รหัส",dataIndex: "id",key: "id"},
     { title: "หัวข้อ", dataIndex: "title", key: "title" },
-    { title: "รายละเอียด", dataIndex: "discription", key: "discription" },
-    { title: "ชื่อ", dataIndex: "name", key: "name" },
+    { title: "ชื่อ Resever name", dataIndex: "name", key: "name" },
     { title: "สถานะ", dataIndex: "status", key: "status" },
     {
       title: "Set Status",
@@ -35,8 +29,13 @@ const Table3 = ({
         if (record.status !== "true") {
           return (
             <span>
+              <Link to={`/knowledgeSend/${record._id}`}>
+                <Button type="primary" shape="round" icon="eye">
+                  View
+                </Button>
+              </Link>
               <Link to="/">
-                <Popconfirm title="Sure to Apply?" onConfirm={e => onSubmit()}>
+                <Popconfirm title="Sure to Apply?" onConfirm={e => onSubmit(e)}>
                   <Button onClick={e => onSubmit()} shape="round">
                     Apply
                   </Button>
@@ -50,8 +49,12 @@ const Table3 = ({
   ];
 
   return (
-    <div>
-      <Table columns={columns} dataSource={sender} scroll={{ x: 300 }} />
+    <div style={{ backgroundColor: "#DCDCDC", borderRadius: "5px" }}>
+      <Table
+        columns={columns}
+        dataSource={sender}
+        scroll={{ x: 300, y: 250 }}
+      />
     </div>
   );
 };

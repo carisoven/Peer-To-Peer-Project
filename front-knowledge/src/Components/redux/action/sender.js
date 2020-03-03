@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GETALL_SENDER, GETSENDER_ERROR, GET_APPLY } from "./types";
+import { GETALL_SENDER, GETSENDER_ERROR, GET_APPLY,SHOWSEND_ID } from "./types";
 
 export const getSender = () => async dispatch => {
   try {
@@ -42,3 +42,19 @@ export const applySender = formApp => async dispatch => {
     });
   }
 };
+
+
+export const getKnowSenderByID = id => async dispatch =>{
+  try {
+    const res = await axios.get(`/api/sender/${id}`);
+    dispatch({
+      type: SHOWSEND_ID,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({
+      type: GETSENDER_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+}
