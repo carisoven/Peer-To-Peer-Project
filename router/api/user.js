@@ -4,9 +4,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { check, validationResult } = require("express-validator");
 const config = require("config");
-
 const User = require("../../model/User");
 
+
+//register User
 router.post(
   "/",
   [
@@ -70,15 +71,37 @@ router.post(
   }
 );
 
-router.get("/", async (req, res) => {
-  try {
-    const user = await User.find().select("-password");
-    if (!user) return res.status(400).json({ msg: "User not Found" });
-    res.json(user);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
+
+// Get All User
+// router.get("/", async (req, res) => {
+//   try {
+//     const user = await User.find().select("-password");
+//     if (!user) return res.status(400).json({ msg: "User not Found" });
+//     res.json(user);
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).send("Server Error");
+//   }
+// });
+
+
+//Get one User By Id
+router.post("/userid",async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const user = await User.findOne({uid:req.body.uid}).select("-password");
+      if (!user) return res.status(400).json({ msg: "User not Found" });
+      res.json(user);
+
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
   }
-});
+);
 
 module.exports = router;
